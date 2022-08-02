@@ -1,7 +1,9 @@
 const { response, request } = require('express');
+const User = require('../models/user');
+const bcryptjs = require('bcryptjs');
 
 const usersGet = (req = request, res = response) => {
-    const query = req.query;    
+    const query = req.query;
     res.json({
         msg: 'get API - controller',
         query
@@ -16,13 +18,22 @@ const usersPut = (req, res = response) => {
     });
 }
 
-const usersPost = (req, res = response) => {
-    const { name, age } = req.body;
+const usersPost = async (req, res = response) => {
+
+    const { name, email, password, role } = req.body;
+    const user = new User({ name, email, password, role });
+    
+    // Verificar si el email existe
+
+    // Encriptar password
+    const salt = bcryptjs.genSaltSync();
+    user.password = bcryptjs.hashSync(password, salt);
+    // Save on db
+    await user.save();
+    
     res.json({
         msg: 'post API - controller',
-        // body,
-        name,
-        age
+        user
     });
 }
 
