@@ -35,14 +35,10 @@ const UserSchema = Schema({
     }
 });
 
+// edita metodos de mongoose // oculta una propiedad del body de manera "global", en este caso el password y la varsion
+UserSchema.methods.toJSON = function() {
+    const { __v, password, ...user } = this.toObject();
+    return user;
+}
+
 module.exports = model('User', UserSchema);
-/**
- * 
- name
- email
- password
- img
- role
- state
- google
- */
